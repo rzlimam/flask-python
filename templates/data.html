@@ -1,0 +1,134 @@
+{%extends "base_dashboard.html"%}
+
+{%block content%}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Data Table</h6>
+        </div>
+        <div class="card-body">
+            
+            <!-- Search Bar -->
+            <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-6 my-2 my-md-2 mw-100 navbar-search"
+                action="{{url_for('data', name=name)}}", method="GET">
+                <div class="input-group">
+                    <input type="text" class="form-control bg-light border-2 small" placeholder="Search name..."
+                        aria-label="Search" aria-describedby="basic-addon2" name="name">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <!-- End Search Bar -->
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr class="text-center">
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Berat Badan</th>
+                            <th>Tinggi Badan</th>
+                            <th>BMI</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    {%for data in resp%}
+                    <tbody>
+                        <tr class="text-center">
+                            <td>{{loop.index}}</td>
+                            <td>{{data[1]}}</td>
+                            <td>{{data[2]}}</td>
+                            <td>{{data[3]}}</td>
+                            <td>{{data[4]}}</td>
+                            {%if data[5] == 'Normal' %}
+                                <td class="text-success">{{data[5]}}</td>
+                            {%elif data[5] == 'Kurus' or data[5] == 'Gemuk' %}
+                                <td class="text-warning">{{data[5]}}</td>
+                            {%else%}
+                                <td class="text-danger">{{data[5]}}</td>
+                            {%endif%}
+                            <td> 
+                                <a href="{{url_for('update', id=data[0])}}" class="btn btn-success btn-circle">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-danger btn-circle" data-toggle="modal" data-target="#exampleModalCenter">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModalCenter">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Delete Data</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        <h3>Apakah Anda yakin ini menghapus data ini?</h3>
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
+                                        <form action="{{url_for('hapus', id=data[0])}}" method="post">
+                                            <input type="submit" value="Delete" class="btn btn-danger">
+                                        </form>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <!-- <form action="" method="POST">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button class="btn btn-danger btn-circle" onclick="notif()" type="submit">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form> -->
+                                
+                                <!-- <a href="http://localhost:5000/hapus/{{data[0]}}" class="btn btn-danger btn-circle" onclick="notif()">
+                                    <i class="fas fa-trash"></i>
+                                </a> -->
+                            </td>
+                        </tr>
+                    {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function notif(){
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+            )
+        }
+        })
+    }
+    
+</script>
+<!-- /.container-fluid -->
+{%endblock%}
